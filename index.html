@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Free Keyword Generator with Google Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        .header {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .sub-header {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .input-box {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #e67e22;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #d35400;
+        }
+        .results {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        async function fetchGoogleResults() {
+            const keyword = document.getElementById("keywordInput").value.trim();
+            const resultsDiv = document.getElementById("results");
+
+            if (keyword === "") {
+                resultsDiv.innerHTML = "Please enter a keyword.";
+                return;
+            }
+
+            const apiKey = "AIzaSyBkqiWfQZm84Z-Hpt6-hpnBpqVRTLS0IfM"; // Replace with your API key
+            const searchEngineId = "12be11892df794ee8"; // Replace with your CSE ID
+            const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(keyword)}&key=${apiKey}&cx=${searchEngineId}`;
+
+            resultsDiv.innerHTML = "Searching for keywords...";
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    let resultsHtml = `<b>Search Results for "${keyword}":</b><ul>`;
+                    data.items.forEach(item => {
+                        resultsHtml += `<li><a href="${item.link}" target="_blank">${item.title}</a><br>${item.snippet}</li>`;
+                    });
+                    resultsHtml += "</ul>";
+                    resultsDiv.innerHTML = resultsHtml;
+                } else {
+                    resultsDiv.innerHTML = "No results found.";
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = "An error occurred while fetching results. Please try again.";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">Free Keyword Generator with Google Search</div>
+        <div class="sub-header">Find thousands of keyword ideas using Google.</div>
+        <div class="input-box">
+            <input type="text" id="keywordInput" placeholder="Enter keyword">
+            <button onclick="fetchGoogleResults()">Find Keywords</button>
+        </div>
+        <div class="results" id="results"></div>
+    </div>
+</body>
+</html>
